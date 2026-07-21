@@ -1,0 +1,81 @@
+---
+slug: /
+title: Om Tenor testdatasøk
+sidebar_position: 1
+---
+
+# Om Tenor testdatasøk
+Tenor testdatasøk gir deg muligheten til å søke i syntetiske testdata fra Test-Norge, og er et arbeidsverktøy for alle som trenger testdata til integrasjonstester. På enhetstest- og enhetsintegrasjonstestnivå er det anbefalt å stubbe og mocke eksterne avhengigheter.
+
+Tenor utvides med testdata fra nye kilder etter hvert som kildene er klare.
+
+Tenor testdatasøk består av en nettbasert søkeløsning. I den nettbaserte løsningen kan du velge å søke etter testdata ved å benytte de forhåndsdefinerte søkekriteriene, eller ved å lage dine egne søk i Avansert søk.
+
+Det er også etablert et maskingrensesnitt, som du kan integrere mot fra dine automatiske verdikjedetester, slik at du kan søke i testdataene.
+
+
+## Hvordan søke via brukergrensesnittet?
+
+### Innlogging
+Du logger inn i Tenor testdatasøk ved å bruke ID-porten.
+
+### Søk
+- I venstremenyen vises de forhåndsdefinerte søkekriteriene for kildene. 
+- I midten vises trefflisten som passer til søkekriteriene du har søkt på.
+- Til høyre finner du mer informasjon om testpersonene eller testvirksomhetene du vil se nærmere på. Her finner du nøkkelinformasjon, relasjoner og du kan se på og laste ned kildedata.
+- I "Valgte søkekriterier" vises oversikt over de søkekriteriene du har valgt. Her kan du nullstille søket ditt ved å krysse bort ett eller flere av søkekriteriene som listes, eller nullstill søket ved å trykke på krysset til høyre.
+- Ved å trykke på de tre prikkene til høyre for "Valgte søkekriterier" kan du velge å  lagre søket, eller eksportere søket.
+
+### Avansert søk
+- Avansert søk tilbyr flere og mer utvidete søkemuligheter enn Søk fordi du kan definere dine egne søkestrenger med hjelp av Kibana Query Language (KQL).
+- Avansert søk kan brukes for å lage og teste søkestrenger som du vil bruke til dine automatiske tester via API-et.
+- Angi søket ditt i feltet "Søkestreng" ved å skrive inn et søk i KQL, trykk Enter eller klikk på "Søk".
+- Når du har funnet et passende søk, kan du generere en API-link til søket ved hjelp av de tre prikkene til høyre for søkefeltet og valget "Åpne søk i API".
+- Det er innebygd hjelp i form av forslag og autocomplete til å skrive søkestrengen når du klikker deg inn i søkefeltet.
+- [Link til offisiell KQL tutorial](https://www.elastic.co/guide/en/kibana/master/kuery-query.html)
+
+#### Eksempler på avanserte søk Folkeregisteret:
+| Resultat      | Søkestreng(KQL)  |
+| ------------- |-------------|
+| Person som bor i Drammen | ```bostedsadresse:Drammen ```|
+| person født etter 01.12.2003 | ```foedselsdato > 2003-12-01 ```|
+| Person født mellom år 2003 og 2005 |```foedselsdato >2003 and foedselsdato <2005```|
+| Person født mellom år 2003 og 2005 |```foedselsdato: [2003 to 2005] ```|
+| Person med barn født mellom år 2003 og 2005 |```tenorRelasjoner.freg: {tenorRelasjonsnavn: "barn" AND foedselsdato : [2003 to 2005]} ```|
+| Person med partner som nylig har endret sivilstand |```tenorRelasjoner.freg: {tenorRelasjonsnavn: "partner" AND sisteHendelse: "endringISivilstand"} ```|
+| Person med bostedsadresse på Rotebergvegen 1 |```bostedsadresse : "Rotebergvegen 1" ```|
+| Person som bor på Rotebergvegen 1 med barn som bor på rotebergvegen 1 |```bostedsadresse:"Rotebergvegen 1" AND tenorRelasjoner.freg: {tenorRelasjonsnavn: "barn" AND bostedsadresse: "Rotebergvegen 1"}"```|
+
+#### Eksempler på avanserte søk Enhetsregisteret og Foretaksregisteret:
+| Resultat      | Søkestreng(KQL)  |
+| ------------- |-------------|
+| NUF som har forretningsadresse i Japan | ```organisasjonsform.kode : "NUF" and forretningsadresse.land:"Japan"```|
+| Virksomheter som har Nynorsk som målform | ```maalform: "Nynorsk"```|
+
+
+### Lagrede søk
+Her finner du oversikt over søkene du har lagret. For å lagre søk må du først opprette en profil. 
+
+Ved å klikke på de tre prikkene til høyre for søket og velge "Utfør søk" blir søket gjennomført og resultatet blir vist i Søk eller Avansert søk, avhengig av hvor søket ble lagret fra. 
+
+Du kan slette alle søk ved å slette din profil, eller slette enkeltsøk ved å klikke på de tre prikkene til høyre for søket og velge "Slett søk".
+
+### Kilder
+Kilder viser en oversikt over alle kildene som finnes i Tenor testdatasøk, og når de sist ble oppdatert.
+
+
+## Hvordan søke via API-et
+Søk via API-et benytter Kibana Query Language (KQL) på samme måte som søk i Avansert søk. Du kan bruke avansert søk for å bygge opp søkestrengene dine og kopiere ut søkestrengen til bruk i API-søk.
+
+Vil du justere antallet resultater du eksporterer ved et søk kan du legge til: '&antall=20' i url'en for å endre antall resultater til 20.
+
+Ønsker du mer informasjon i hvert resultat kan du legge til: '&nokkelinformasjon=true' i url'en.
+
+Tenor testdatasøk er et verktøy for å finne testdata til test av integrasjoner. Det er viktig at man ikke integrerer mot Tenor API for å finne testdata til automatiske tester på lavere nivå. På enhetstest- og enhetsintegrasjonstestnivå er det anbefalt å stubbe og mocke eksterne avhengigheter. Det betyr at du kun bør bruke Tenor testdatasøk sitt API fra verdikjedetestene dine.
+
+## Hvordan få tilgang til API-et for søk
+Bruk av API-et krever integrasjon mot Tenor testdatasøk via Maskinporten sitt testmiljø (test). For tilgang til Tenor sitt scope må man sende en mail til tenor@skatteetaten.no der du oppgir ditt organisasjonsnummer og at du ønsker tilgang til søke-API'et.
+
+Se dokumentasjon fra Digitaliseringsdirektoratet:
+- Hva er Maskinporten? https://www.digdir.no/felleslosninger/maskinporten/869
+- Ta i bruk Maskinporten: https://samarbeid.digdir.no/maskinporten/ta-i-bruk-maskinporten/97

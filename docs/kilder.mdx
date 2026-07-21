@@ -1,0 +1,45 @@
+---
+slug: kilder
+sidebar_position: 3
+---
+# Kilder i Tenor testdatasøk
+
+## Hvilke testdata finnes i Tenor testdatasøk
+Tenor testdatasøk gir deg mulighet til å søke i testdata fra Test-Norge. Søkene utføres ved å angi ønskede egenskaper ved testdataene, enten via forhåndsdefinerte søkekriterier tilgjengeliggjort i Tenors brukergrensesnitt eller via egendefinerte spørringer i avansert søk eller søke-API-et. Resultatene fra søket benyttes i tester direkte mot kilden dataene kommer fra. Med andre ord; Tenor benyttes til å finne testpersoner og testvirksomheter, mens selve testingen med disse testdataene utføres direkte mot de ulike kildenes testsystemer. For eksempel om man trenger å teste mot Folkeregisteret, så kan de aktuelle testpersonene hentes fra Tenor, mens testene utføres mot Folkeregisterets testsystemer.  
+
+Under finner du en liste over hvilke kilder som finnes, med lenker til hvor du finner mer informasjon om oppkobling og test mot kilden. 
+
+### Syntetisk Folkeregister
+- Felles datakatalog https://data.norge.no/datasets/33833825-8153-481c-a672-311502c97a74
+- GitHub: https://skatteetaten.github.io/folkeregisteret-api-dokumentasjon/om-tjenestene/
+
+### Syntetisk Enhetsregister og Foretaksregister
+- Felles datakatalog:
+Enhetsregisteret https://data.norge.no/datasets/68d08f28-a16d-4fab-a953-ed4ab08ce2e2
+Foretaksregisteret https://data.norge.no/datasets/ae335ad2-0f3d-4eb1-98ce-87882776a123
+- Github: https://data.brreg.no/enhetsregisteret/api/docs/index.html
+
+Syntetiske data er tilgjengelig fra Brønnøysundregistrenes testmiljø, og samsvarer med de data som finnes i Tenor testdatasøk.
+
+Dokumentasjonen for integrasjonen er lik som i produksjon (med unntak av endepunkt): https://data.brreg.no/enhetsregisteret/api/dokumentasjon/no/index.html
+
+Endepunkt til testmiljø: https://data.ppe.brreg.no/enhetsregisteret/api/
+
+### Syntetiske inntekts- og skattedata
+- Github: https://skatteetaten.github.io/api-dokumentasjon/
+
+
+## Hvem kan lese sine testdata inn i Tenor
+Alle offentlige etater og private aktører som har syntetiske testdata som kan være nyttige i forbindelse med test på tvers av systemer kan lese sine testdata inn i Tenor. Testdataene som tilbys må være data som kan knyttes til personer eller virksomheter.
+
+Søkedataene som er tilgjengelige i Tenor testdatasøk produseres og leses inn av etater og virksomheter som har syntetiske testdatasett som man ønsker å tilby til eksterne testformål. Dataene datakildeeieren leser inn må fortløpende være synkronisert med dataene i deres egne testmiljø. Det vil si at en bruker av Tenor som henter ut testdata fra en gitt kilde finner igjen de samme dataene i testmiljøet til datakildeeier. Eksempler på datakildeeiere kan være Skatteetaten, Brønnøysundregistrene eller andre etater og virksomheter.
+
+
+## Hvordan data leses inn i Tenor
+For å lese data inn i søkeløsningen, må datakildeeier selv lage et adapter som kobles til søkeløsningen. Via denne adapteren leses data inn fra kilde til søkeløsningen. Søkeløsningen er en generisk løsning som leser inn en datapakke, hovedsakelig i form av JSON-filer, fra en datakilde. Dataene gjøres om til søkbare dokumenter i løsningen, med søkekriterier og detaljer spesifisert av datakildeeier i en konfigurasjon som er i henhold til en XSD. I tillegg til søkbare data, kan kildeeier også lese inn rådata fra kilden sin for å la brukere av søkeløsningen se akkurat hvordan dataene ser ut i kilden de kommer fra. Per i dag støtter søkeløsningen kun fremvisning av rådata på JSON-format. 
+
+Det finnes to primærkilder i løsningen: Person (fra Folkeregisteret) og virksomhet (fra Enhetsregisteret). Alle data som leses inn fra andre datakilder (kalt "sekundærkilder") må berike en av disse to. Dette gjøres ved at nøkler for dataene kobles med nøkler for en av de to primærkildene (personnummer for Person eller organisasjonsnummer for Virksomhet). Disse nøklene angis i konfigurasjonen. Ved innlesing av data valideres disse nøkkelkoblingene og kun elementer fra sekundærkilden som er koblet til et element fra en primærkilde som allerede finnes i søkeløsningen tillates. F.eks. en sekundærkilde med finansielle opplysninger om personer leses inn. Det er angitt i konfigurasjonen at denne sekundærkilden beriker primærkilden Folkeregisteret. Når dataene leses inn, sjekkes det at hvert element fra sekundærkilden har finansielle opplysninger om fiktive personer som allerede finnes i Tenor lest inn fra det syntetiske Folkeregisteret (FREG). Finnes ikke den syntetiske personen i søkedataene fra FREG, avvises elementet fra sekundærkilden. 
+
+For eksempelkode for hvordan man lager et adapter og forklaring til dette, se referanse til teknisk del av github/eksempelpakke.
+
+For en beskrivelse av hvordan man kommer i gang samt oversikt over avtaler som må inngås, se "Komme i gang"/"Før man leser inn data".

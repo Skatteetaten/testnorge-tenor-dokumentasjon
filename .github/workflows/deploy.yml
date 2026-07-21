@@ -1,0 +1,55 @@
+name: Deploy til GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  # Lar deg starte publisering manuelt fra Actions-fanen
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  bygg:
+    name: Bygg nettsted
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sjekk ut kode
+        uses: actions/checkout@v4
+
+      - name: Sett opp Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer avhengigheter
+        run: npm ci
+
+      - name: Bygg nettsted
+        run: npm run build
+
+      - name: Last opp build-artefakt
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  publiser:
+    name: Publiser til GitHub Pages
+    needs: bygg
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publiser til GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
