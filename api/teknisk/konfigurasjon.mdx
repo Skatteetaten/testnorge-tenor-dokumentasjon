@@ -1,0 +1,315 @@
+
+# Konfigurasjon - JSON
+## Objekttype
+### Konfigurasjon
+
+```json
+{
+  "datasett":{...},
+  "relasjoner":{...},
+  "soekevisning":{...},
+  "soekekriterier":{...}
+}
+```
+
+|Navn|Obligatorisk| Type                              |Beskrivelse|Eksempel|
+|---|---|-----------------------------------|---|---|
+|**datasett**|Ja| [Datasett](#datasett)             |Datasett metadata informasjon||
+|**relasjoner**|Ja| [Relasjoner](#relasjoner)         |Konfigurasjon for relasjoner til primærkilder||
+|**soekevisning**|Ja| [Soekedokument](#soekevisning)    |Konfigurasjon av felter til bruk i nøkkelinformasjon i GUI||
+|**soekekriterier**|Ja| [SoekeKriterier](#soekekriterier) |Konfigurasjon av søkekriterier i enkelt søk i GUI||
+
+
+### Datasett
+
+Overordnet beskrivelse av datasettet.
+
+```json
+"datasett": {
+  "identifikator": "...",
+  "datasettOverskrift": "...",
+  "datasettEier": {...},
+  "fellesdatakatalogDatasettIdentifikator": "..."
+}
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**identifikator**|Ja|[Tekst](#tekst)|Unik datasett identifikator som eies av virksomheten i løsningen.|`freg`|
+|**datasettOverskrift**|Ja|[Tekst](#tekst)|||
+|**datasettEier**|Ja|[Enhet](#enhet)|||
+|fellesdatakatalogDatasettIdentifikator|Nei|[Tekst](#tekst)|Identifikator for datasett publisert i Felles Datakatalog.|`8bfa055a-9b0c-40df-a7c2-2e58173eb2e0`|
+
+
+### Enhet
+
+```json
+"datasettEier": {
+  "organisasjonsnavn": "...",
+  "organisasjonsnummer": "..."
+}
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**organisasjonsnavn**|Ja|[Organisasjonsnavn](#organisasjonsnavn)|||
+|**organisasjonsnummer**|Ja|[Organisasjonsnummer](#organisasjonsnummer)|||
+
+
+### Relasjoner
+
+Relasjoner
+
+```json
+"relasjoner": {
+  "relasjoner": [...]
+}
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|relasjoner|Nei|[Relasjon](#relasjon)|||
+
+
+### Relasjon
+
+Relasjonsnøkler til andre datasett for å opptre som sekundærkilde til de.
+
+```json
+"relasjoner": [
+  {
+      "felt": {...},
+      "referertDatasett": "...",
+      "relasjon": "...",
+      "relasjonsretning": "..."
+  },
+  ...
+]
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**felt**|Ja|[Felt](#felt)|Felt i søkedokument som skal fungere som nøkkel mot et annet datasett.|`<felt><feltnavn>forfatter</feltnavn><feltOverskrift>Forfatter</feltOverskrift></felt>`|
+|**referertDatasett**|Ja|[Tekst](#tekst)|Datasett identifikator til referert datasett.|`freg`|
+|**relasjon**|Ja|[Tekst](#tekst)|Relasjonsnøkkel||
+|relasjonsretning|Nei|[Retning](#retning)|Hvilke retning relasjonen har semantisk. Bare relevant for relasjonsvisning.|`OPP`|
+
+### SoekeKriterier
+
+Liste over søkekriterier som vises i GUI
+
+```json
+"soekekriterier": {
+  "soek": [...]
+}
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**soek**|Ja|[Soek](#soek)|||
+
+
+### Soek
+
+Predefinerte søk kan deles opp i temaer, eller som løse elementer.
+
+```json
+"soek": [
+  {
+    "soekeTema": "...",
+    "soekekriterier": [
+      {...}
+    ],
+    "erPrimaerKildeSoek": ...,
+    "kombinertSoek": ...,
+    "primaerkilde": ...
+  },
+  {
+    "soekekriterie": {...},
+    "erPrimaerKildeSoek": ...,
+    "primaerkilde": ...
+  }
+]
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**soekeTema**|Ja|[Tekst](#tekst)|Tema for søkekriteriet som vises samlet i GUI under overskriftet fra dette feltet.||
+|**soekekriterier**|Ja|[SoekeKriterie](#soekekriterie)|||
+|**erPrimaerKildeSoek**|Ja|[Boolsk](#boolsk)|Kilder som er både sekundær og primærkilder kan velge hvilke filter som skal vises når den brukes som primærkilde.||
+|**kombinertSoek**|nei|[KombinertSoekType](#kombinertsoektype)|Lager kombinert søk av typen som er spesifisert.||
+|**primaerkilde**|nei|[Tekst](#tekst)|Hvis man ønsker at søket kun skal vises for én primærkilde.||
+
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**soekekriterie**|Ja|[SoekeKriterie](#soekekriterie)|||
+|**erPrimaerKildeSoek**|Ja|[Boolsk](#boolsk)|Kilder som er både sekundær og primærkilder kan velge hvilke filter som skal vises når den brukes som primærkilde.||
+|**primaerkilde**|nei|[Tekst](#tekst)|Hvis man ønsker at søket kun skal vises for én primærkilde.||
+
+
+### SoekeKriterie
+
+Et søkekriterie som vises i GUI
+
+```json
+"soekekriterier": [
+  {
+    "felt": {...},
+    "typeSoek": "...",
+    "feltformat": "...",
+    "soekeVerdi": [...]
+  },
+  ...
+]
+```
+
+|Navn|Obligatorisk| Type                     | Beskrivelse                                                                                                                                |Eksempel|
+|---|---|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---|
+|**felt**|Ja|[Felt](#felt)|                                                                                                                                            ||
+|**typeSoek**|Ja|[SoekType](#soektype)  |                                                                                                                                            ||
+|feltformat|Nei|[Tekst](#tekst)| Fritekst som vises som placeholder i et felt                                                                                               |`11-siffer`|
+|soekeVerdi|Nei|[SoekeVerdi](#soekeverdi)| Predefinerte verdier som skal vises i GUI for søketypene flervalg og enkeltvalg. Merk at verdiene må kodes som lister i JSON søkedokumentet. ||
+
+
+### SoekeVerdi
+
+```json
+"soekeVerdi": [
+  {
+    "soekeVerdi": "...",
+    "visningsNavn": "...",
+    "skjul": ...
+  },
+  ...
+]
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**soekeVerdi**|Ja|[Tekst](#tekst)|En predefinert verdi|`foedselsnummer`|
+|visningsNavn|Nei|[Tekst](#tekst)|Visningsnavn for verdi|`Fødselsnummer`|
+|skjul|Nei|[Boolsk](#boolsk)|Angi at verdien skal skjules||
+
+## Soekevisning
+
+```json
+"soekevisning": {
+  "dokumentTittel": "...",
+  "sorteringsvalg": {...},
+  "detaljertListe": [...]
+}
+```
+
+|Navn|Obligatorisk| Type                              |Beskrivelse|Eksempel|
+|---|---|-----------------------------------|---|---|
+|dokumentTittel|Nei| [Felt](#felt)                     |Obligatorisk for primærkilder.||
+|sorteringsvalg|Nei| [Sorteringsvalg](#sorteringsvalg) |||
+|**detaljertListe**|Ja| [Felt](#felt)                     |||
+
+
+### Felt
+
+```json
+"felt": {
+  "feltnavn": "...",
+  "feltOverskrift": "..."
+}
+```
+
+|Navn|Obligatorisk|Type|Beskrivelse|Eksempel|
+|---|---|---|---|---|
+|**feltnavn**|Ja|[Tekst](#tekst)|||
+|**feltOverskrift**|Ja|[Tekst](#tekst)|||
+
+### Sorteringsvalg
+
+```json
+"sorteringsvalg": {
+  "sorteringsfelt": "...",
+  "sorteringsretning": "..."
+}
+```
+
+|Navn|Obligatorisk| Type                                    |Beskrivelse|Eksempel|
+|---|---|-----------------------------------------|---|---|
+|**sorteringsfelt**|Ja| [Tekst](#tekst)                         |||
+|**sorteringsretning**|Ja| [Sorteringsretning](#sorteringsretning) |||
+
+## Datatype
+
+### Retning
+
+Type: `string`
+
+|Verdi|Beskrivelse|
+|---|---|
+|opp||
+|ned||
+|tilSiden||
+
+### Sorteringsretning
+
+Type: `string`
+
+|Verdi|Beskrivelse|
+|---|---|
+|stigende||
+|synkende||
+
+
+### SoekType
+
+Type: `string`
+
+|Verdi|Beskrivelse|
+|---|---|
+|FRI_TEKST|Vises som et fritekst inputfelt. JSON typen brukt bestemmer også følgende: Felt som er kodet som tall tillater bare numerisk input. Felt som er kodet som tidspunkt tillater bare dato input og viser også en kalender.|
+|IDENTIFIKATOR|Vises som et fritekst inputfelt, men tillater ikke whitespaces.|
+|DATO_FRA_TIL|Viser to datofelt der man kan skrive inn ønsket dato. Søkedokumenter må ha en verdi mellom de to datoene.|
+|PERIODE_FRA_TIL|Viser to periodefelt (MM.yyyy) der man kan skrive inn ønsket periode. Søkedokumenter må ha en verdi mellom de to datoene.|
+|FRA_TIL|Viser to felt der søkedokumenter må ha en verdi mellom de to verdiene. Samme visning som for fritekst.|
+|DATO|Viser datofelt der man kan skrive inn ønsket dato.|
+|PERIODE|Viser periodefelt (MM.yyyy) der man kan  skrive inn ønsket periode.|
+|ENKELTVALG|Viser verdier som radio buttons eller en dropdown meny, avhengig av hvor mange verdier man kan velge.|
+|FLERVALG|Viser verdier som checkboxer|
+|HAR|Checkbox som søker etter dokumenter som har gitt felt.|
+|HAR_IKKE|Checkbox som søker etter dokumenter som *ikke* har gitt felt.|
+|BOOL|Søk med true eller false i feltet.|
+
+### KombinertSoekType
+
+Type: `string`
+
+|Verdi| Beskrivelse                                                                                                                     |
+|---|---------------------------------------------------------------------------------------------------------------------------------|
+|har| Lager et kombinert har/har-ikke søk. Krever ett kvalifiseringsfelt (søk som ikke er har/har-ikke), og ønskede har/har-ikke søk. |
+
+
+## Primitive
+
+### Tekst
+
+Vilkårlig lang sekvens av tegn inkludert aksenter og spesielle tegn fra standardiserte
+        tegnsett
+      
+
+### Organisasjonsnavn
+
+navn på organisasjon
+
+### Organisasjonsnummer
+
+9 sifret nummer gitt til de som er registrert i Enhetsregisteret.
+
+### Boolsk
+
+angir verdien sann eller usann
+
+### DatoKlokkeslett
+
+en kombinasjon av typene Dato og Klokkeslett. Kodes som en tekststreng etter
+        datoformatering spesifisert i ISO 8601 (ISO 8601:2004 Data elements and interchange formats --
+        Information interchange -- Representation of dates and times).
+      
+
